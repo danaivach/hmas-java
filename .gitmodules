@@ -1,6 +1,6 @@
 [submodule "core"]
 	path = core
-	url = ./core
+	url = git@github.com:danaivach/hmas-core.git
 [submodule "interaction"]
 	path = interaction
-	url = ./interaction
+	url = git@github.com:danaivach/hmas-interaction.git
