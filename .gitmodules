@@ -1,0 +1,6 @@
+[submodule "core"]
+	path = core
+	url = ./core
+[submodule "interaction"]
+	path = interaction
+	url = ./interaction
