@@ -97,7 +97,7 @@ A required input can be defined in an `InputSpecification` that defines contrain
 ```java
 InputSpecification inputSpecification = new InputSpecification.Builder()
         .withRequiredSemanticType("https://saref.etsi.org/core/State")
-        .withProperty(new PropertySpecification.Builder(https://saref.etsi.org/core/hasValue")
+        .withProperty(new PropertySpecification.Builder("https://saref.etsi.org/core/hasValue")
                 .withDataType("http://www.w3.org/2001/XMLSchema#integer")
                 .withMinCount(1)
                 .withMaxCount(1)
