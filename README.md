@@ -5,13 +5,13 @@ A library for handling resources in Hypermedia Multi-Agent Systems based on the 
 - [Hypermedia MAS Interaction Ontology](https://purl.org/hmas/interaction) (see [interaction](https://github.com/danaivach/hmas-interaction))
 
 ### Table of Contents
-- Getting Started
-- Retrieving and Parsing Resource Profiles
-- Creating and Writing Resource Profiles
-  - Agent Profiles
-  - Artifact Profiles
-  - Workspace Profiles
-  - Hypermedia MAS Platform Profiles
+- [Getting Started](#getting-started)
+- [Retrieving and Parsing Resource Profiles](#retrieving-and-parsing-resource-profiles)
+- [Creating and Writing Resource Profiles](#creating-and-writing-resource-profiles)
+  - [Agent Profiles](#agent-profiles)
+  - [Artifact Profiles](#artifact-profiles)
+  - [Workspace Profiles](#workspace-profiles)
+  - [Hypermedia MAS Platform Profiles](#hypermedia-mas-platform-profiles)
 
 ## Getting Started
 TBA
