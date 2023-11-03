@@ -96,12 +96,10 @@ This signifier signifies an `ActionSpecification` of an action that has the sema
 A required input can be defined in an `InputSpecification` that defines contraints on the expected input in the form of a [SHACL shape](https://www.w3.org/TR/shacl/#shapes). For example, to specify that the input should be a `saref:State` that `saref:hasValue` an `integer` value: 
 ```java
 InputSpecification inputSpecification = new InputSpecification.Builder()
-        .withRequiredSemanticType("https://saref.etsi.org/core/State")
-        .withProperty(new PropertySpecification.Builder("https://saref.etsi.org/core/hasValue")
-                .withDataType("http://www.w3.org/2001/XMLSchema#integer")
-                .withMinCount(1)
-                .withMaxCount(1)
-                .build())
+        .setRequiredSemanticTypes("https://saref.etsi.org/core/State")
+        .setDataType("http://www.w3.org/2001/XMLSchema#integer")
+        .setMinCount(1)
+        .setMaxCount(1)
         .build();
 ```
 Implementation details of an action can be defined in a `Form` as an [HCTL Form](https://www.w3.org/2019/wot/hypermedia#Form). For example, to specify that a request with the PUT HTTP method should be sent to `http:switch.example.org/state`:
