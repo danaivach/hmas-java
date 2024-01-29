@@ -4,3 +4,6 @@
 [submodule "interaction"]
 	path = interaction
 	url = git@github.com:danaivach/hmas-interaction.git
+[submodule "bindings"]
+	path = bindings
+	url = git@github.com:danaivach/hmas-bindings.git
