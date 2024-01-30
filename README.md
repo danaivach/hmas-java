@@ -196,7 +196,7 @@ ResourceProfile profile = new ResourceProfile.Builder(new HypermediaMASPlatform.
 ```
 The above code snippet creates a `ResourceProfile` of a `HypermediaMASPlatform` that hosts the agent, the artifact, and the workspace previously defined. The resource profile can be serialized in Turtle using the `ResourceProfileGraphWriter` (see serialization of agent profiles).
 
-##Interacting Through Signifiers
+## Interacting Through Signifiers
 ### Executing Actions
 Signifiers exposed in resource profiles can be used to execute actions. First, we need to retrieve a signifier from a resource profile, and its signified action specification. For instance, we can retrieve an action specification based on the semantic type of an action execution:
 ```java
