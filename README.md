@@ -4,6 +4,9 @@ A library for handling resources in Hypermedia Multi-Agent Systems based on the 
 - [Hypermedia MAS Core Ontology](https://purl.org/hmas/core) (see [core](https://github.com/danaivach/hmas-core))
 - [Hypermedia MAS Interaction Ontology](https://purl.org/hmas/interaction) (see [interaction](https://github.com/danaivach/hmas-interaction))
 
+The library can be used to execute actions based on a given signifier. It allows for the registration of custom payload and protocol bindings, and provides built-in bindings for the following protocols:
+- HTTP (see [bindings](https://github.com/danaivach/hmas-bindings))
+
 ### Table of Contents
 - [Getting Started](#getting-started)
 - [Retrieving and Parsing Resource Profiles](#retrieving-and-parsing-resource-profiles)
@@ -12,6 +15,9 @@ A library for handling resources in Hypermedia Multi-Agent Systems based on the 
   - [Artifact Profiles](#artifact-profiles)
   - [Workspace Profiles](#workspace-profiles)
   - [Hypermedia MAS Platform Profiles](#hypermedia-mas-platform-profiles)
+- [Interacting Through Signifiers](#interacting-through-signifiers)
+  - [Executing Actions](#executing-actions)
+  - [Registering Custom Payload and Protocol Bidnings](creating-custom-payload-and-protocol-bindings)
 
 ## Getting Started
 TBA
@@ -189,3 +195,122 @@ ResourceProfile profile = new ResourceProfile.Builder(new HypermediaMASPlatform.
         .build() ;
 ```
 The above code snippet creates a `ResourceProfile` of a `HypermediaMASPlatform` that hosts the agent, the artifact, and the workspace previously defined. The resource profile can be serialized in Turtle using the `ResourceProfileGraphWriter` (see serialization of agent profiles).
+
+##Interacting Through Signifiers
+### Executing Actions
+Signifiers exposed in resource profiles can be used to execute actions. First, we need to retrieve a signifier from a resource profile, and its signified action specification. For instance, we can retrieve an action specification based on the semantic type of an action execution:
+```java
+String actionType = "https://saref.etsi.org/core/ToggleCommand";
+Optional<Signifier> signifier = profile.getFirstExposedSignifier(actionType);
+
+if (signifier.isPresent()) {
+  ActionSpecification actionSpec = signifier.get().getActionSpecification();
+}
+```
+
+The form of the action specification can be used to prepare an action for execution. For example, if there is a registered protocol binding that is compatible with the protocol scheme of the form's target, then an `Action` object could be created and executed as follows:
+
+```java
+Form form = actionSpec.getFirstForm();
+PayloadBinding payloadBinding = PayloadBindings.getBinding(form);
+
+Action action = protocolBinding.bind(form);
+ActionExecution actionExec = action.execute();
+```
+
+Alternatively, an agent can execute an action by providing an actor id that adentifies it. In the case that the built-in HTTP protocol binding is used, the actor id will be used to specify the `X-Agent-WebID` header of the generated HTTP action.
+
+```java
+String actorId = "http://hyperagent.org/alice";
+ActionExecution actionExec = action.execute(actorId);
+```
+
+Additionally, if there is a registered payload binding that is compatible with the content type in the form, then an `Input` object could be created and used for executing an action. For instance, the following signifies the specification of an action for registering as the operator of an XArm robotic arm. The action requires an input whose constraints are specified in a SHACL shape (see [Artifact Profiles](#agent-profiles) for more about input specifications). The form specifies that the input should be serialized based on the `application/xarm+json` content type.
+
+```rdf
+@base <https://example.org/profiles/cherrybot> .
+@prefix hctl: <https://www.w3.org/2019/wot/hypermedia#> .
+@prefix htv: <http://www.w3.org/2011/http#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xs: <http://www.w3.org/2001/XMLSchema#> .
+@prefix onto: <https://example.org/onto/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix hmas: <https://purl.org/hmas/> .
+
+<#registerable> a hmas:Signifier ;
+  hmas:signifies [  a sh:NodeShape;
+    sh:class hmas:ActionExecution, onto:LogIn ;
+    sh:property [
+       sh:path prov:used ;
+       sh:minCount "1"^^xs:int ;
+       sh:maxCount "1"^^xs:int ;
+       sh:hasValue <#form>
+    ], [
+      sh:path hmas:hasInput ;
+      sh:qualifiedValueShape <#input-spec> ;
+      sh:qualifiedMinCount 1 ;
+      sh:qualifiedMaxCount 1 ;
+    ], [
+      sh:path hmas:hasOutput ;
+      sh:qualifiedValueShape <#output-spec> ;
+      sh:qualifiedMinCount 1 ;
+      sh:qualifiedMaxCount 1 ;
+    ]    
+  ].
+
+<#input-spec> a sh:NodeShape ;
+  sh:class foaf:Agent ;
+  sh:property [
+    sh:path foaf:name ;
+    sh:minCount 1;
+    sh:maxCount 1 ;
+    sh:datatype xs:string
+  ], [
+    sh:path foaf:mbox ;
+    sh:minCount 1;
+    sh:maxCount 1 ;
+    sh:datatype xs:string
+  ].
+
+<#output-spec> a sh:NodeShape ;
+  sh:class foaf:Agent ;
+  sh:property [
+    sh:path foaf:account ;
+    sh:minCount 1;
+    sh:maxCount 1 ;
+    sh:datatype xs:string
+  ] .
+  
+<#form> a hctl:Form;
+  hctl:hasTarget <https://api.interactions.ics.unisg.ch/cherrybot/operator> ;
+  htv:methodName "POST" ;
+  hctl:forContentType "application/xarm+json" .
+```
+
+Based on the input specification, we can construct an input map, where the semantic annotations(s) of the specified input are used as map keys. For instance, to register as the operator of the robotic arm, the map holds the name and the mailbox address of the registering agent based on annotations defined by the [FOAF vocabulary](http://xmlns.com/foaf/spec/). Then, a payload binding that is compatible with the content type `application/xam+json` can be used to construct an input. The generated input is selialized based on the content type `application/xam+json` and validated (TBD) based on the input specification.
+
+```java
+ProtocolBinding protocolBinding = PayloadBindings.getBinding(form);
+
+HashMap<String, String> agentDetails = new HashMap<>();
+agentDetails.put("http://xmlns.com/foaf/0.1/name", "Alice");
+agentDetails.put("http://xmlns.com/foaf/0.1/mbox", "alice@example.org");
+
+Optional<InputSpecification> inputSpec = actionSpec.getInputSpecification();
+if (inputSpec.isPresent()) {
+  Input input = payloadBinding.bind(inputSpec, agentDetails);
+  ActionExecution actionExec = action.execute(input);
+}
+```
+
+In case an output specification is signified, the raw output data can be retrieved from the `ActionExecution` object. The output data can be de-serialized using the relevant payload binding.
+
+```java
+Optional<OutputSpecification> outputSpec = actionSpec.getOutputSpecification();
+if (outputSpec.isPresent()) {
+  Map<String, Object> accountDetails = payloadBinding.unbind(outputSpec, actionExec.getOutputData());
+  accountDetails.get("http://xmlns.com/foaf/0.1/account");
+}
+```
