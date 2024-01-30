@@ -314,3 +314,6 @@ if (outputSpec.isPresent()) {
   accountDetails.get("http://xmlns.com/foaf/0.1/account");
 }
 ```
+
+### Registering Custom Payload and Protocol Bidnings 
+(TBA)
