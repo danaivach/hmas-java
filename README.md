@@ -37,7 +37,7 @@ ResourceProfile profile = ResourceProfileGraphReader.readFromString(TDFormat.RDF
 ```
 To retrieve and parse a resource profile of an _artifact_, you can directly use the artifact profile reader, e.g.:
 ```java
-ArtifactProfile profile = ArtifactProfileGraphReader.readFromString(TDFormat.RDF_TURTLE, artifactProfile);
+ResourceProfile profile = ResourceProfileGraphReader.readFromString(TDFormat.RDF_TURTLE, artifactProfile);
 ```
 To retrieve and parse a resource profile of an _agent_, you can directly use the agent profile reader, e.g.:
 ```java
@@ -83,13 +83,13 @@ Artifact artifact = new Artifact.Builder()
         .setIRIAsString("https://example.org/profiles/2#artifact")
         .build();
 
-ArtifactProfile profile =
-            new ArtifactProfile.Builder(artifact)
+ResourceProfile profile =
+            new ResourceProfile.Builder(artifact)
                     .setIRIAsString("https://example.org/profiles/2")
                     .exposeSignifier(togglable);
                     .build();
 ```
-The above code snippet creates an `ArtifactProfile` of an `saref:LightSwitch` `Artifact` (see the [SAREF Ontology](https://saref.etsi.org/core/v3.1.1/)https://saref.etsi.org/core/v3.1.1/). The profile exposes a `Signifier` for indicating that the light switch is `togglable`. This Signifier can be defined in the following manner:
+The above code snippet creates an `ResourceProfile` of an `saref:LightSwitch` `Artifact` (see the [SAREF Ontology](https://saref.etsi.org/core/v3.1.1/)https://saref.etsi.org/core/v3.1.1/). The profile exposes a `Signifier` for indicating that the light switch is `togglable`. This Signifier can be defined in the following manner:
 ```java
 Signifier signifier = new Signifier.Builder(new ActionSpecification.Builder(toggleForm)
                             .addSemanticType("https://saref.etsi.org/core/ToggleCommand")
