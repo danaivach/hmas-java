@@ -1,5 +1,5 @@
 rootProject.name = 'hmas-java'
-include 'core'
-include 'interaction'
-include 'bindings'
+include('core')
+include('interaction')
+include('bindings')
 
