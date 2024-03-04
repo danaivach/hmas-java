@@ -93,20 +93,26 @@ The above code snippet creates an `ResourceProfile` of an `saref:LightSwitch` `A
 ```java
 Signifier signifier = new Signifier.Builder(new ActionSpecification.Builder(toggleForm)
                             .addSemanticType("https://saref.etsi.org/core/ToggleCommand")
-                            .setRequiredInput(inputSpecification)
+                            .setInputSpecification(inputSpecification)
                             .build())
                     .build()   
 ```
-This signifier signifies an `ActionSpecification` of an action that has the semantic type `saref:ToggleCommand`. The action requires an input defined in an `inputSpecification`, and is implemented through a `toggleForm` `Form`, which is a type of hypermedia control.
+This signifier signifies an `ActionSpecification` of an action that has the semantic type `saref:ToggleCommand`. The action requires an input defined in an `IOSpecification`, and is implemented through a `toggleForm` `Form`, which is a type of hypermedia control.
 
-A required input can be defined in an `InputSpecification` that defines contraints on the expected input in the form of a [SHACL shape](https://www.w3.org/TR/shacl/#shapes). For example, to specify that the input should be a `saref:State` that `saref:hasValue` an `integer` value: 
+An input or output can be defined in an `IOSpecification` that defines contraints on the expected input or, respectively output, in the form of a [SHACL shape](https://www.w3.org/TR/shacl/#shapes). An input or output specification can be of type `StringSpecification`, `IntegerSpecification`, `DoubleSpecification`, `FloatSpecification`, `BooleanSpecification`, `ValueSpecification` (in case expected values are identified by IRIs), or `QualifiedValueSpecification` (in case expected values have properties). For example, to specify that the input should be a `saref:State` that `saref:hasValue` an `int` value: 
 ```java
-InputSpecification inputSpecification = new InputSpecification.Builder()
-        .setRequiredSemanticTypes("https://saref.etsi.org/core/State")
-        .setDataType("http://www.w3.org/2001/XMLSchema#integer")
-        .setMinCount(1)
-        .setMaxCount(1)
-        .build();
+
+QualifiedValueSpecification inputSpecification = new QualifiedValueSpecification.Builder()
+            .addRequiredSemanticType("https://saref.etsi.org/core/State")
+            .setRequired(false)
+            .addPropertySpecification("https://saref.etsi.org/core/hasValue"),
+                    new IntegerSpecification.Builder()
+                            .setName("Toggle Value")
+                            .setDescription("Toggle the light switch to the selected value")
+                            .setDefaultValue(0)
+                            .setRequired(true)
+                            .build())
+            .build();
 ```
 Implementation details of an action can be defined in a `Form` as an [HCTL Form](https://www.w3.org/2019/wot/hypermedia#Form). For example, to specify that a request with the PUT HTTP method should be sent to `http:switch.example.org/state`:
 ```java
@@ -118,7 +124,7 @@ Form toggleForm = new Form.Builder("http:switch.example.org/state")
 ```
 To serialize the artifact profile in Turtle:
 ```java
-String artifactProfile = new ArtifactProfileGraphWriter(profile)
+String artifactProfile = new ResourceProfileGraphWriter(profile)
         .setNamespace("saref", "https://saref.etsi.org/core/")
         .write();
 ```
@@ -146,16 +152,18 @@ The generated artifact profile:
        sh:hasValue <#form>
      ], [
       sh:path hmas:hasInput ;
-      sh:qualifiedValueShape [ a sh:NodeShape;
+      sh:qualifiedValueShape [ a sh:Shape;
         sh:class saref:State;
         sh:property [
           sh:path saref:hasValue;
+          sh:name "Toggle Value";
+          sh:description "Toggle the light switch to the selected value";
+          sh:defaultValue "0"^^xs:int;
           sh:minCount "1"^^xs:int;
           sh:maxCount "1"^^xs:int;
-          sh:datatype xs:integer
+          sh:datatype xs:int
         ] 
       ] ;
-      sh:qualifiedMinCount "1"^^xs:int;
       sh:qualifiedMaxCount "1"^^xs:int; 
     ] 
    ]
@@ -260,7 +268,7 @@ Additionally, if there is a registered payload binding that is compatible with t
     ]    
   ].
 
-<#input-spec> a sh:NodeShape ;
+<#input-spec> a sh:Shape ;
   sh:class foaf:Agent ;
   sh:property [
     sh:path foaf:name ;
@@ -274,7 +282,7 @@ Additionally, if there is a registered payload binding that is compatible with t
     sh:datatype xs:string
   ].
 
-<#output-spec> a sh:NodeShape ;
+<#output-spec> a sh:Shape ;
   sh:class foaf:Agent ;
   sh:property [
     sh:path foaf:account ;
@@ -298,7 +306,7 @@ HashMap<String, String> agentDetails = new HashMap<>();
 agentDetails.put("http://xmlns.com/foaf/0.1/name", "Alice");
 agentDetails.put("http://xmlns.com/foaf/0.1/mbox", "alice@example.org");
 
-Optional<InputSpecification> inputSpec = actionSpec.getInputSpecification();
+Optional<IOSpecification> inputSpec = actionSpec.getInputSpecification();
 if (inputSpec.isPresent()) {
   Input input = payloadBinding.bind(inputSpec, agentDetails);
   ActionExecution actionExec = action.execute(input);
@@ -308,7 +316,7 @@ if (inputSpec.isPresent()) {
 In case an output specification is signified, the raw output data can be retrieved from the `ActionExecution` object. The output data can be de-serialized using the relevant payload binding.
 
 ```java
-Optional<OutputSpecification> outputSpec = actionSpec.getOutputSpecification();
+Optional<IOSpecification> outputSpec = actionSpec.getOutputSpecification();
 if (outputSpec.isPresent()) {
   Map<String, Object> accountDetails = payloadBinding.unbind(outputSpec, actionExec.getOutputData());
   accountDetails.get("http://xmlns.com/foaf/0.1/account");
