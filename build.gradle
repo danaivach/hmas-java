@@ -13,6 +13,8 @@ repositories {
 
 dependencies {
     implementation 'com.github.danaivach:hmas-core:refactor~jitpack-SNAPSHOT'
+    implementation 'com.github.danaivach:hmas-interaction:refactor~jitpack-SNAPSHOT'
+    implementation 'com.github.danaivach:hmas-bindings:refactor~jitpack-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
