@@ -1,6 +1,6 @@
 plugins {
     id 'java-library'
-    id 'idea'
+    id 'maven-plugin'
 }
 allprojects {
     version = '1.0-SNAPSHOT'
