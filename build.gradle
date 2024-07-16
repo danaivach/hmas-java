@@ -8,6 +8,11 @@ allprojects {
     group = 'ch.unisg.ics.interactions.hmas'
 }
 
+java {
+  withJavadocJar()
+  withSourcesJar()
+}
+
 repositories {
     mavenCentral()
     maven { url 'https://jitpack.io' }
