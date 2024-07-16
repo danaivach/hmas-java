@@ -1,2 +1,3 @@
 rootProject.name = 'hmas-java'
+include('hmas-java:core')
 
