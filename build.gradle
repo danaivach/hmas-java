@@ -14,8 +14,8 @@ repositories {
 }
 
 dependencies {
-    api project('com.github.danaivach:hmas-core:main-SNAPSHOT')
-    api project('com.github.danaivach:hmas-interaction:main-SNAPSHOT')
+    api 'com.github.danaivach:hmas-core:main-SNAPSHOT'
+    api 'com.github.danaivach:hmas-interaction:main-SNAPSHOT'
     implementation 'com.github.danaivach:hmas-bindings:main-SNAPSHOT'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
