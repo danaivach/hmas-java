@@ -20,7 +20,49 @@ The library can be used to execute actions based on a given signifier. It allows
   - [Registering Custom Payload and Protocol Bidnings](creating-custom-payload-and-protocol-bindings)
 
 ## Getting Started
-TBA
+You can add hMAS-Java to your project with [JitPack](https://jitpack.io/) to directly use the following libraries:
+- [hMAS-core](https://github.com/danaivach/hmas-core)
+- [hMAS-interaction](https://github.com/danaivach/hmas-interaction)
+- [hMAS-bindings](https://github.com/danaivach/hmas-bindings)
+
+### Add the JitPack repository to your build file
+
+Gradle:
+
+```groovy
+allprojects {
+  repositories {
+    ...
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+
+Maven:
+```
+<repositories>
+  <repository>
+    <id>jitpack.io</id>
+    <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+```
+
+### Add a dependency to WoT-TD-Java
+
+Gradle:
+```groovy
+implementation 'com.github.danaivach:hmas-java:main-SNAPSHOT'
+```
+
+Maven:
+```
+<dependency>
+  <groupId>com.github.danaivach</groupId>
+  <artifactId>hmas-java</artifactId>
+  <version>main-SNAPSHOT</version>
+</dependency>
+```
 
 ## Retrieving and Parsing Resource Profiles
 To retrieve and parse a _resource profile_ from a URL:
