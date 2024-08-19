@@ -1,4 +1,4 @@
-# hmas-java
+# hMAS-Java
 
 A library for handling resources in Hypermedia Multi-Agent Systems based on the HyperAgents ontologies:
 - [Hypermedia MAS Core Ontology](https://purl.org/hmas/core) (see [core](https://github.com/danaivach/hmas-core))
