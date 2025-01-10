@@ -17,10 +17,10 @@ The library can be used to execute actions based on a given signifier. It allows
   - [Hypermedia MAS Platform Profiles](#hypermedia-mas-platform-profiles)
 - [Interacting Through Signifiers](#interacting-through-signifiers)
   - [Executing Actions](#executing-actions)
-  - [Registering Custom Payload and Protocol Bidnings](creating-custom-payload-and-protocol-bindings)
-- [Credits and Thanks](credits-and-thanks)
-  - [Citation](citation)
-  - [Acknowledgements](acknowledgements)
+  - [Registering Custom Payload and Protocol Bidnings](#creating-custom-payload-and-protocol-bindings)
+- [Credits and Thanks](#credits-and-thanks)
+  - [Citation](#citation)
+  - [Acknowledgements](#acknowledgements)
 
 ## Getting Started
 You can add hMAS-Java to your project with [JitPack](https://jitpack.io/) to directly use the following libraries:
