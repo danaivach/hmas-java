@@ -18,6 +18,9 @@ The library can be used to execute actions based on a given signifier. It allows
 - [Interacting Through Signifiers](#interacting-through-signifiers)
   - [Executing Actions](#executing-actions)
   - [Registering Custom Payload and Protocol Bidnings](creating-custom-payload-and-protocol-bindings)
+- [Credits and Thanks](credits-and-thanks)
+  - [Citation](citation)
+  - [Acknowledgements](acknowledgements)
 
 ## Getting Started
 You can add hMAS-Java to your project with [JitPack](https://jitpack.io/) to directly use the following libraries:
@@ -367,3 +370,11 @@ if (outputSpec.isPresent()) {
 
 ### Registering Custom Payload and Protocol Bidnings 
 (TBA)
+
+## Credits and Thanks
+
+### Citation
+See [the citation and DOI of the latest release](https://zenodo.org/records/14196780/latest)
+
+### Acknowledgements
+This work has received funding from the Swiss National Science Foundation under grant No. 189474 [HyperAgents](https://github.com/HyperAgents/hmas).
